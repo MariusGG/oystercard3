@@ -1,11 +1,16 @@
 require 'oystercard'
 describe Oystercard do
+
+let(:entry_station) { double("Liverpool St")}
+let(:exit_station) { double("Aldgate")}
+
 context 'when initialized' do
   it 'has a balance of zero' do
     oystercard = Oystercard.new
     expect(oystercard.balance).to eq 0
   end
 end
+
 describe '#top_up' do
   it 'tops up the card' do
     random_number = rand
@@ -13,6 +18,7 @@ describe '#top_up' do
     expect(subject.balance).to eq random_number
   end
 end
+
 context 'at maximum balance' do
   it 'can not be topped up' do
     limit = Oystercard::MAX_LIMIT
@@ -30,19 +36,25 @@ describe '#deduct' do
     end
 end
 
-it { is_expected.to respond_to :touch_in }
-it { is_expected.to respond_to :touch_out }
+ describe '#touch_in' do
+   it "remembers the entry station" do
+     subject.top_up(5)
+     subject.touch_in(entry_station)
+     expect(subject.entry_station).to eq entry_station
+   end
 
-# describe '#touch_in'
+ end
+
+
 describe '#in_journey?' do
 it 'is true after touch_in' do
   subject.top_up(10)
-  subject.touch_in
+  subject.touch_in(entry_station)
   expect(subject.in_journey?).to be true
 end
 it 'is false after touch_out' do
   subject.top_up(10)
-  subject.touch_in
+  subject.touch_in(entry_station)
   subject.touch_out
   expect(subject.in_journey?).to be false
 end
@@ -52,7 +64,9 @@ context "customer doesn't have enough funds" do
   it "raises an error on touch in" do
     min_amount = Oystercard::MIN_AMOUNT
     subject.top_up(rand)
-    expect {subject.touch_in}.to raise_error("Insufficient balance, minimum amount is #{min_amount}")
+    expect {subject.touch_in(entry_station)}.to raise_error("Insufficient balance, minimum amount is #{min_amount}")
   end
 end
+
+
 end
