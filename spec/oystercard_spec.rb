@@ -27,14 +27,14 @@ context 'at maximum balance' do
   end
 end
 
-describe '#deduct' do
-  it 'deducts from my card' do
-      random_number1 = rand
-      random_number2 = rand
-      subject.top_up(random_number1)
-      expect {subject.deduct(random_number2)}.to change {subject.balance}.by -random_number2
-    end
-end
+# describe '#deduct' do
+#   it 'deducts from my card' do
+#       random_number1 = rand
+#       random_number2 = rand
+#       subject.top_up(random_number1)
+#       expect {subject.deduct(random_number2)}.to change {subject.balance}.by -random_number2
+#     end
+# end
 
  describe '#touch_in' do
    it "remembers the entry station" do
@@ -46,17 +46,27 @@ end
  end
 
 
+
+describe '#touch_out' do
+  it 'deducts the min fare' do
+    min_amount = Oystercard::MIN_AMOUNT
+    subject.top_up(90)
+    expect {subject.touch_out}.to change {subject.balance}.by -min_amount
+  end
+end
 describe '#in_journey?' do
 it 'is true after touch_in' do
-  subject.top_up(10)
-  subject.touch_in(entry_station)
-  expect(subject.in_journey?).to be true
+  card = Oystercard.new
+  card.top_up(10)
+  card.touch_in(entry_station)
+  expect(card.send(:in_journey?)).to be true
 end
+
 it 'is false after touch_out' do
   subject.top_up(10)
   subject.touch_in(entry_station)
   subject.touch_out
-  expect(subject.in_journey?).to be false
+  expect(subject.send(:in_journey?)).to be false
 end
 end
 

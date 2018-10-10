@@ -14,9 +14,6 @@ class Oystercard
     @balance += amount
   end
 
-  def deduct(amount)
-    @balance -= amount
-  end
   def touch_in(station)
     raise "Insufficient balance, minimum amount is #{MIN_AMOUNT}" if @balance < 1
     @entry_station = station
@@ -24,9 +21,8 @@ class Oystercard
   end
   def touch_out
     @entry_station = nil
-  end
-  def in_journey?
-    @entry_station != nil
+    deduct(MIN_AMOUNT)
+    @in_journey =false
   end
 
 private
@@ -34,5 +30,14 @@ private
 def max?
   @balance >= MAX_LIMIT
 end
+
+def deduct(amount)
+  @balance -= amount
+end
+
+def in_journey?
+  @entry_station != nil
+end
+
 
 end
