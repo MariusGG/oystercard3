@@ -46,6 +46,13 @@ it 'is false after touch_out' do
   subject.touch_out
   expect(subject.in_journey?).to be false
 end
+end
 
+context "customer doesn't have enough funds" do
+  it "raises an error on touch in" do
+    min_amount = Oystercard::MIN_AMOUNT
+    subject.top_up(rand)
+    expect {subject.touch_in}.to raise_error("Insufficient balance, minimum amount is #{min_amount}")
+  end
 end
 end
