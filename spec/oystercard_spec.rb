@@ -30,4 +30,22 @@ describe '#deduct' do
     end
 end
 
+it { is_expected.to respond_to :touch_in }
+it { is_expected.to respond_to :touch_out }
+
+# describe '#touch_in'
+describe '#in_journey?' do
+it 'is true after touch_in' do
+  subject.top_up(10)
+  subject.touch_in
+  expect(subject.in_journey?).to be true
+end
+it 'is false after touch_out' do
+  subject.top_up(10)
+  subject.touch_in
+  subject.touch_out
+  expect(subject.in_journey?).to be false
+end
+
+end
 end
