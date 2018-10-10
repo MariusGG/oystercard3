@@ -21,4 +21,13 @@ context 'at maximum balance' do
   end
 end
 
+describe '#deduct' do
+  it 'deducts from my card' do
+      random_number1 = rand
+      random_number2 = rand
+      subject.top_up(random_number1)
+      expect {subject.deduct(random_number2)}.to change {subject.balance}.by -random_number2
+    end
+end
+
 end
